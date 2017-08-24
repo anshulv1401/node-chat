@@ -1,6 +1,6 @@
 const path=require('path');
 const express=require('express');
-const publipath=path.join(__dirname,"../public");
+const publipath=path.join(__dirname,"../app");
 //console.log(__dirname+"../public ");
 
 const socketIO=require('socket.io');
