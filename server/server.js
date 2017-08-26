@@ -1,6 +1,9 @@
 const path=require('path');
 const express=require('express');
-const publipath=path.join(__dirname,"../app");
+const {generateMessage,generateLocationMessage}=require('./utils/message');
+//const {generateLocationMessage}=require('./utils/message');
+
+const publipath=path.join(__dirname,"../public");
 //console.log(__dirname+"../public ");
 
 const socketIO=require('socket.io');
@@ -41,7 +44,34 @@ io.on('connection', (socket) => {
 
   socket.on('CreateEvent',(NewEmail)=>{
     console.log('create email',NewEmail);
-  })
+  });
+
+socket.emit('newMessage',generateMessage('Admin','Welcome to chat App'));
+socket.broadcast.emit('newMessage',generateMessage('Admin','New User Joined'));
+
+  socket.on('createMessage', (message,callback) => {
+     console.log('createMessage', message);
+    //  io.emit('newMessage', {
+    //    from: message.from,
+    //    text: message.text,
+    //    createdAt: new Date().getTime()
+    //  });
+//     socket.broadcas.emit('newMessage', {
+      io.emit('newMessage1', {
+       from: message.from,
+       text: message.text,
+       createdAt: new Date().getTime()
+     });
+     callback();
+   });
+
+   socket.on('createLocationMessage', (coords) => {
+     io.emit('newLocationMessage',generateLocationMessage('Admin', coords.latitude, coords.longitude));
+   });
+
+
+
+
 });
 app.use(express.static(publipath));
 
